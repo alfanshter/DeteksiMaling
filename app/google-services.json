@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "301739341180",
+    "firebase_url": "https://sistemkeamanantoko-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sistemkeamanantoko",
+    "storage_bucket": "sistemkeamanantoko.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301739341180:android:c3041451b4b683ec2120f9",
+        "android_client_info": {
+          "package_name": "com.aan.deteksimaling"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXWV1VwwEsePQsvzuZKL4EKr95BUPwOtY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
