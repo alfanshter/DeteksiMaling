@@ -1,8 +1,12 @@
 package com.aan.deteksimaling.ui.home
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,12 +15,17 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -48,7 +58,7 @@ import com.google.firebase.database.ValueEventListener
 fun HomeScreen(navController: NavController) {
 
     var alarm = fetchAlarm()
-
+    val context = LocalContext.current
     Scaffold { innerPadding ->
         Column(
             Modifier
@@ -98,28 +108,30 @@ fun HomeScreen(navController: NavController) {
                         .offset(y = 100.dp) // Offset the Card to overlap with the Box (adjust as needed)
                         .zIndex(1f) // Ensure the Card is drawn on top
                 ) {
-                    Column(
+                    Row(
                         Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp)
+                            .fillMaxSize()
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "Alarm ",
-                            textAlign = TextAlign.Center,
-                            color = Color.DarkGray,
-                        )
+
+                        TombolLampu(context)
+
                         Text(
                             color = Color.Black,
                             modifier = Modifier.fillMaxWidth(),
                             fontSize = 20.sp,
                             text = if (alarm == 1) "BUNYI" else "MATI",
-                            textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Center
                         )
                     }
 
                 }
 
             }
+
+
 
 
             // Card that overlaps the previous Box
@@ -205,6 +217,40 @@ fun HomeScreen(navController: NavController) {
 
 }
 
+@Composable
+fun TombolLampu(context : Context) {
+    var checked by remember { mutableStateOf(true) }
+
+    Switch(
+        checked = checked,
+        onCheckedChange = {
+            checked = it
+        },
+        thumbContent = if (checked) {
+            {
+                Toast.makeText(context, "Mode kemanan on", Toast.LENGTH_SHORT).show()
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                )
+                sendMode(1)
+            }
+        } else {
+            Toast.makeText(context, "Mode kemanan off", Toast.LENGTH_SHORT).show()
+            sendMode(0)
+            null
+        }
+    )
+}
+
+@Composable
+fun sendMode(mode : Int) {
+    val database = FirebaseDatabase.getInstance()
+    val myRef = database.getReference("mode")
+
+    myRef.child("status").setValue(mode)
+}
 @Composable
 fun fetchAlarm() : Int {
     val database = FirebaseDatabase.getInstance()
